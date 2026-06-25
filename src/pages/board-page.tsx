@@ -14,8 +14,8 @@ import {
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { getBoardById, getTasksByStatus, teamMembers } from "@/mock-data";
 import { ROUTES } from "@/routes/route-paths";
-import type { TaskStatus } from "@/types";
 import { SEO } from "@/components/layout/seo";
+import type { TaskStatus } from "@/features/tasks/types";
 
 const columns: TaskStatus[] = [
   "backlog",

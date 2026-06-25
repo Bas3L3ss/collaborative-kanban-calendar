@@ -1,4 +1,7 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,8 +17,45 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { ROUTES } from "@/routes/route-paths";
 import { SEO } from "@/components/layout/seo";
+import { useLogin } from "@/features/auth/hooks/use-login";
+import { useAuthStore } from "@/store/auth-store";
+
+const loginSchema = z.object({
+  email: z
+    .string()
+    .min(1, "Email is required")
+    .email("Please enter a valid email"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
+
+type LoginSchema = z.infer<typeof loginSchema>;
 
 export function LoginPage() {
+  const navigate = useNavigate();
+  const { setAccessToken } = useAuthStore.getState();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginSchema>({
+    resolver: zodResolver(loginSchema),
+    mode: "onBlur",
+  });
+
+  const loginMutation = useLogin();
+
+  const onSubmit = async (data: LoginSchema) => {
+    try {
+      const response = await loginMutation.mutateAsync(data);
+      setAccessToken(response.accessToken);
+
+      navigate(ROUTES.DASHBOARD);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <SEO
@@ -29,36 +69,59 @@ export function LoginPage() {
           <CardDescription>Sign in to your account to continue</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="name@company.com"
-              autoComplete="email"
-            />
-          </div>
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="password">Password</Label>
-              <a
-                href="#"
-                className="text-xs text-muted-foreground hover:text-primary"
-              >
-                Forgot password?
-              </a>
+          <form
+            className="space-y-4"
+            onSubmit={handleSubmit(onSubmit)}
+            noValidate
+          >
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="name@company.com"
+                autoComplete="email"
+                {...register("email")}
+                aria-invalid={!!errors.email}
+              />
+              {errors.email && (
+                <p className="text-xs text-red-500 mt-1">
+                  {errors.email.message}
+                </p>
+              )}
             </div>
-            <Input
-              id="password"
-              type="password"
-              placeholder="Enter your password"
-              autoComplete="current-password"
-            />
-          </div>
-          <Button className="w-full" asChild>
-            <Link to={ROUTES.DASHBOARD}>Sign in</Link>
-          </Button>
-
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password">Password</Label>
+                <a
+                  href="#"
+                  className="text-xs text-muted-foreground hover:text-primary"
+                >
+                  Forgot password?
+                </a>
+              </div>
+              <Input
+                id="password"
+                type="password"
+                placeholder="Enter your password"
+                autoComplete="current-password"
+                {...register("password")}
+                aria-invalid={!!errors.password}
+              />
+              {errors.password && (
+                <p className="text-xs text-red-500 mt-1">
+                  {errors.password.message}
+                </p>
+              )}
+            </div>
+            <Button
+              className="w-full"
+              type="submit"
+              disabled={isSubmitting || loginMutation.isPending}
+            >
+              {loginMutation.isPending ? "Signing in..." : "Sign in"}
+            </Button>
+          </form>
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <Separator />
@@ -69,7 +132,6 @@ export function LoginPage() {
               </span>
             </div>
           </div>
-
           <div className="grid grid-cols-2 gap-3">
             <Button variant="outline" type="button">
               Google

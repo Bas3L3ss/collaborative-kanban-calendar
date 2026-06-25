@@ -3,8 +3,8 @@ import { Plus } from "lucide-react";
 import { TaskCard } from "@/components/task-card";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import type { Task, TaskStatus } from "@/types";
 import { cn } from "@/lib/utils";
+import type { Task, TaskStatus } from "@/features/tasks/types";
 
 const columnLabels: Record<TaskStatus, string> = {
   backlog: "Backlog",

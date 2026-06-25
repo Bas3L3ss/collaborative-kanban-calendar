@@ -1,11 +1,12 @@
 import { Navigate, Outlet } from "react-router-dom";
 
 import { ROUTES } from "./route-paths";
+import { useAuthStore } from "@/store/auth-store";
 
 export function PublicRoute() {
-  const isAuthenticated = false;
+  const token = useAuthStore((s) => s.accessToken);
 
-  if (isAuthenticated) {
+  if (token) {
     return <Navigate to={ROUTES.DASHBOARD} replace />;
   }
 

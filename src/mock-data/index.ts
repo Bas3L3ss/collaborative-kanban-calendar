@@ -1,12 +1,9 @@
-import type {
-  ActivityItem,
-  Board,
-  DashboardStats,
-  NotificationItem,
-  Task,
-  User,
-  WorkspaceSettings,
-} from "@/types";
+import type { ActivityItem } from "@/features/activities/types";
+import type { User } from "@/features/auth/types";
+import type { Board } from "@/features/boards/types";
+import type { NotificationItem } from "@/features/notifications/types";
+import type { Task } from "@/features/tasks/types";
+import type { DashboardStats, WorkspaceSettings } from "@/types";
 
 export const currentUser: User = {
   id: "user-1",
@@ -321,6 +318,9 @@ export function getTasksByBoardId(boardId: string): Task[] {
   return tasks.filter((task) => task.boardId === boardId);
 }
 
-export function getTasksByStatus(boardId: string, status: Task["status"]): Task[] {
+export function getTasksByStatus(
+  boardId: string,
+  status: Task["status"],
+): Task[] {
   return getTasksByBoardId(boardId).filter((task) => task.status === status);
 }

@@ -20,9 +20,9 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { notifications } from "@/mock-data";
-import type { NotificationItem } from "@/types";
 import { cn } from "@/lib/utils";
 import { SEO } from "@/components/layout/seo";
+import type { NotificationItem } from "@/features/notifications/types";
 
 const typeIcons: Record<
   NotificationItem["type"],

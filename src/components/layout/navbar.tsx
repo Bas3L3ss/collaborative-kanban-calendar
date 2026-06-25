@@ -21,22 +21,66 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Sidebar } from "@/components/layout/sidebar";
-import { currentUser, notifications } from "@/mock-data";
+import { notifications } from "@/mock-data";
 import { ROUTES } from "@/routes/route-paths";
 import { useSidebarStore } from "@/store/sidebar-store";
+import { useUser } from "@/features/auth/hooks/use-user";
+import { getInitials } from "@/utils/get-initials";
+import type { User } from "@/features/auth/types";
 
-function getInitials(name: string) {
-  return name
-    .split(" ")
-    .map((part) => part[0])
-    .join("")
-    .toUpperCase()
-    .slice(0, 2);
+function UserAvatarMenu({ user }: { user: User }) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="relative size-8 rounded-full p-0">
+          <Avatar size="sm">
+            <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
+          </Avatar>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-56">
+        <DropdownMenuLabel>
+          <div className="flex flex-col">
+            <span>{user.name}</span>
+            <span className="text-xs font-normal text-muted-foreground">
+              {user.email}
+            </span>
+          </div>
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Link to={ROUTES.SETTINGS}>Settings</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link to={ROUTES.LOGIN}>Sign out</Link>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+function UserAvatarSkeleton() {
+  return (
+    <Button
+      variant="ghost"
+      className="relative size-8 rounded-full p-0"
+      disabled
+    >
+      <Avatar size="sm">
+        <AvatarFallback>
+          <span className="text-xs opacity-50">--</span>
+        </AvatarFallback>
+      </Avatar>
+    </Button>
+  );
 }
 
 export function Navbar() {
+  const { data, isLoading } = useUser();
   const { mobileOpen, setMobileOpen } = useSidebarStore();
   const unreadCount = notifications.filter((n) => !n.read).length;
+
+  const currentUser: User | undefined = data?.user;
 
   return (
     <>
@@ -74,32 +118,11 @@ export function Navbar() {
 
           <ModeToggle />
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative size-8 rounded-full p-0">
-                <Avatar size="sm">
-                  <AvatarFallback>{getInitials(currentUser.name)}</AvatarFallback>
-                </Avatar>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuLabel>
-                <div className="flex flex-col">
-                  <span>{currentUser.name}</span>
-                  <span className="text-xs font-normal text-muted-foreground">
-                    {currentUser.email}
-                  </span>
-                </div>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link to={ROUTES.SETTINGS}>Settings</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link to={ROUTES.LOGIN}>Sign out</Link>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {isLoading || !currentUser ? (
+            <UserAvatarSkeleton />
+          ) : (
+            <UserAvatarMenu user={currentUser} />
+          )}
         </div>
       </header>
 

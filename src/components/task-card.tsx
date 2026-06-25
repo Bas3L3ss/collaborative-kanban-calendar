@@ -4,8 +4,8 @@ import { Calendar, MessageSquare, Paperclip } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import type { Task, TaskPriority } from "@/types";
 import { cn } from "@/lib/utils";
+import type { Task, TaskPriority } from "@/features/tasks/types";
 
 const priorityStyles: Record<TaskPriority, string> = {
   low: "bg-muted text-muted-foreground",
@@ -53,7 +53,10 @@ export function TaskCard({ task, className }: TaskCardProps) {
           <div className="flex items-center gap-2">
             <Badge
               variant="outline"
-              className={cn("text-[10px] capitalize", priorityStyles[task.priority])}
+              className={cn(
+                "text-[10px] capitalize",
+                priorityStyles[task.priority],
+              )}
             >
               {task.priority}
             </Badge>

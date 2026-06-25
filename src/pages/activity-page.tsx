@@ -20,9 +20,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { activities } from "@/mock-data";
-import type { ActivityItem } from "@/types";
 import { cn } from "@/lib/utils";
 import { SEO } from "@/components/layout/seo";
+import type { ActivityItem } from "@/features/activities/types";
 
 const typeConfig: Record<
   ActivityItem["type"],

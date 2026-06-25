@@ -6,8 +6,9 @@ import { Toaster } from "@/components/ui/sonner";
 import { AppRoutes } from "@/routes";
 
 import { HelmetProvider } from "react-helmet-async";
+import { AuthBootstrap } from "./layouts/jwt-refresh-layout";
 
-function PageLoader() {
+export function PageLoader() {
   return (
     <div className="space-y-4 p-8">
       <Skeleton className="h-8 w-48" />
@@ -24,12 +25,14 @@ function PageLoader() {
 export function App() {
   return (
     <HelmetProvider>
-      <BrowserRouter>
-        <Suspense fallback={<PageLoader />}>
-          <AppRoutes />
-        </Suspense>
-        <Toaster />
-      </BrowserRouter>
+      <AuthBootstrap>
+        <BrowserRouter>
+          <Suspense fallback={<PageLoader />}>
+            <AppRoutes />
+          </Suspense>
+          <Toaster />
+        </BrowserRouter>
+      </AuthBootstrap>
     </HelmetProvider>
   );
 }
