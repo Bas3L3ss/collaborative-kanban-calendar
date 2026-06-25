@@ -1,14 +1,31 @@
-import "./App.css";
-import { Button } from "./components/ui/button";
-import { ModeToggle } from "./components/ui/mode-toggle";
+import { Suspense } from "react";
+import { BrowserRouter } from "react-router-dom";
 
-function App() {
+import { Skeleton } from "@/components/ui/skeleton";
+import { Toaster } from "@/components/ui/sonner";
+import { AppRoutes } from "@/routes";
+
+function PageLoader() {
   return (
-    <>
-      <ModeToggle />
-      <Button>hi</Button>
-    </>
+    <div className="space-y-4 p-8">
+      <Skeleton className="h-8 w-48" />
+      <Skeleton className="h-4 w-96" />
+      <div className="grid gap-4 pt-4 sm:grid-cols-2 xl:grid-cols-4">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <Skeleton key={i} className="h-32 rounded-xl" />
+        ))}
+      </div>
+    </div>
   );
 }
 
-export default App;
+export function App() {
+  return (
+    <BrowserRouter>
+      <Suspense fallback={<PageLoader />}>
+        <AppRoutes />
+      </Suspense>
+      <Toaster />
+    </BrowserRouter>
+  );
+}

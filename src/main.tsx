@@ -1,12 +1,14 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import App from "./App.tsx";
-import Layout from "./layouts/index.tsx";
+
+import { App } from "./App.tsx";
+import { RootLayout } from "./layouts/index.tsx";
+import "./App.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <Layout>
+    <RootLayout>
       <App />
-    </Layout>
+    </RootLayout>
   </StrictMode>,
 );

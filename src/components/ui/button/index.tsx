@@ -1,10 +1,10 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 import { Slot } from "radix-ui";
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/utils";
 import { buttonVariants } from "./variants";
 
-export default function Button({
+export function Button({
   className,
   variant = "default",
   size = "default",
@@ -26,3 +26,5 @@ export default function Button({
     />
   );
 }
+
+export { buttonVariants };

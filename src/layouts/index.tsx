@@ -1,8 +1,9 @@
-import React from "react";
+import type { ReactNode } from "react";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
+
 import { ThemeProvider } from "@/components/ui/theme-provider";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export function RootLayout({ children }: { children: ReactNode }) {
   return (
     <ThemeProvider>
       <TooltipProvider>{children}</TooltipProvider>
