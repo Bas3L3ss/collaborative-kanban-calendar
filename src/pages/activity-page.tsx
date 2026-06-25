@@ -22,6 +22,7 @@ import {
 import { activities } from "@/mock-data";
 import type { ActivityItem } from "@/types";
 import { cn } from "@/lib/utils";
+import { SEO } from "@/components/layout/seo";
 
 const typeConfig: Record<
   ActivityItem["type"],
@@ -90,69 +91,75 @@ function ActivityTimelineItem({ activity }: { activity: ActivityItem }) {
 
 export function ActivityPage() {
   return (
-    <div className="space-y-6 p-6 lg:p-8">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Activity</h1>
-          <p className="text-muted-foreground">
-            A timeline of actions across your workspace.
-          </p>
+    <>
+      <SEO
+        title="Activity"
+        description="Review recent actions, task updates, and collaboration history across your workspace."
+      />
+      <div className="space-y-6 p-6 lg:p-8">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">Activity</h1>
+            <p className="text-muted-foreground">
+              A timeline of actions across your workspace.
+            </p>
+          </div>
+          <Button variant="outline" size="sm">
+            <Filter className="size-4" />
+            Filter activity
+          </Button>
         </div>
-        <Button variant="outline" size="sm">
-          <Filter className="size-4" />
-          Filter activity
-        </Button>
-      </div>
 
-      <div className="grid gap-4 sm:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-3">
+          <Card className="shadow-sm">
+            <CardContent className="flex items-center gap-3 pt-6">
+              <div className="flex size-10 items-center justify-center rounded-lg bg-emerald-500/10">
+                <CheckCircle2 className="size-5 text-emerald-600" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold">24</p>
+                <p className="text-xs text-muted-foreground">Task updates</p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="shadow-sm">
+            <CardContent className="flex items-center gap-3 pt-6">
+              <div className="flex size-10 items-center justify-center rounded-lg bg-violet-500/10">
+                <MessageSquare className="size-5 text-violet-600" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold">18</p>
+                <p className="text-xs text-muted-foreground">Comments</p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="shadow-sm">
+            <CardContent className="flex items-center gap-3 pt-6">
+              <div className="flex size-10 items-center justify-center rounded-lg bg-blue-500/10">
+                <ArrowRightLeft className="size-5 text-blue-600" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold">12</p>
+                <p className="text-xs text-muted-foreground">Status changes</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         <Card className="shadow-sm">
-          <CardContent className="flex items-center gap-3 pt-6">
-            <div className="flex size-10 items-center justify-center rounded-lg bg-emerald-500/10">
-              <CheckCircle2 className="size-5 text-emerald-600" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold">24</p>
-              <p className="text-xs text-muted-foreground">Task updates</p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="shadow-sm">
-          <CardContent className="flex items-center gap-3 pt-6">
-            <div className="flex size-10 items-center justify-center rounded-lg bg-violet-500/10">
-              <MessageSquare className="size-5 text-violet-600" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold">18</p>
-              <p className="text-xs text-muted-foreground">Comments</p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="shadow-sm">
-          <CardContent className="flex items-center gap-3 pt-6">
-            <div className="flex size-10 items-center justify-center rounded-lg bg-blue-500/10">
-              <ArrowRightLeft className="size-5 text-blue-600" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold">12</p>
-              <p className="text-xs text-muted-foreground">Status changes</p>
-            </div>
+          <CardHeader>
+            <CardTitle>Activity Timeline</CardTitle>
+            <CardDescription>
+              All recent actions from the past 7 days
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {activities.map((activity) => (
+              <ActivityTimelineItem key={activity.id} activity={activity} />
+            ))}
           </CardContent>
         </Card>
       </div>
-
-      <Card className="shadow-sm">
-        <CardHeader>
-          <CardTitle>Activity Timeline</CardTitle>
-          <CardDescription>
-            All recent actions from the past 7 days
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {activities.map((activity) => (
-            <ActivityTimelineItem key={activity.id} activity={activity} />
-          ))}
-        </CardContent>
-      </Card>
-    </div>
+    </>
   );
 }

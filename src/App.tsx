@@ -5,6 +5,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Toaster } from "@/components/ui/sonner";
 import { AppRoutes } from "@/routes";
 
+import { HelmetProvider } from "react-helmet-async";
+
 function PageLoader() {
   return (
     <div className="space-y-4 p-8">
@@ -21,11 +23,13 @@ function PageLoader() {
 
 export function App() {
   return (
-    <BrowserRouter>
-      <Suspense fallback={<PageLoader />}>
-        <AppRoutes />
-      </Suspense>
-      <Toaster />
-    </BrowserRouter>
+    <HelmetProvider>
+      <BrowserRouter>
+        <Suspense fallback={<PageLoader />}>
+          <AppRoutes />
+        </Suspense>
+        <Toaster />
+      </BrowserRouter>
+    </HelmetProvider>
   );
 }

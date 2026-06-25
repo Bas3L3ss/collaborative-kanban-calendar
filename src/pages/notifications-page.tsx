@@ -22,6 +22,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { notifications } from "@/mock-data";
 import type { NotificationItem } from "@/types";
 import { cn } from "@/lib/utils";
+import { SEO } from "@/components/layout/seo";
 
 const typeIcons: Record<
   NotificationItem["type"],
@@ -81,92 +82,55 @@ export function NotificationsPage() {
   const read = notifications.filter((n) => n.read);
 
   return (
-    <div className="space-y-6 p-6 lg:p-8">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Notifications</h1>
-          <p className="text-muted-foreground">
-            Stay updated on mentions, assignments, and deadlines.
-          </p>
+    <>
+      <SEO
+        title="Notifications"
+        description="Stay updated with task assignments, mentions, workspace updates, and team activity."
+      />
+
+      <div className="space-y-6 p-6 lg:p-8">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">Notifications</h1>
+            <p className="text-muted-foreground">
+              Stay updated on mentions, assignments, and deadlines.
+            </p>
+          </div>
+          <Button variant="outline" size="sm">
+            <CheckCheck className="size-4" />
+            Mark all as read
+          </Button>
         </div>
-        <Button variant="outline" size="sm">
-          <CheckCheck className="size-4" />
-          Mark all as read
-        </Button>
-      </div>
 
-      <Tabs defaultValue="all">
-        <TabsList>
-          <TabsTrigger value="all">
-            All
-            <Badge variant="secondary" className="ml-1.5">
-              {notifications.length}
-            </Badge>
-          </TabsTrigger>
-          <TabsTrigger value="unread">
-            Unread
-            <Badge variant="secondary" className="ml-1.5">
-              {unread.length}
-            </Badge>
-          </TabsTrigger>
-        </TabsList>
+        <Tabs defaultValue="all">
+          <TabsList>
+            <TabsTrigger value="all">
+              All
+              <Badge variant="secondary" className="ml-1.5">
+                {notifications.length}
+              </Badge>
+            </TabsTrigger>
+            <TabsTrigger value="unread">
+              Unread
+              <Badge variant="secondary" className="ml-1.5">
+                {unread.length}
+              </Badge>
+            </TabsTrigger>
+          </TabsList>
 
-        <TabsContent value="all" className="mt-4">
-          <Card className="shadow-sm">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Bell className="size-5" />
-                Notification Feed
-              </CardTitle>
-              <CardDescription>
-                Recent activity and alerts from your workspace
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {notifications.map((notification) => (
-                <NotificationRow
-                  key={notification.id}
-                  notification={notification}
-                />
-              ))}
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="unread" className="mt-4">
-          <Card className="shadow-sm">
-            <CardHeader>
-              <CardTitle>Unread Notifications</CardTitle>
-              <CardDescription>
-                {unread.length} notification{unread.length !== 1 && "s"} require
-                your attention
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {unread.length > 0 ? (
-                unread.map((notification) => (
-                  <NotificationRow
-                    key={notification.id}
-                    notification={notification}
-                  />
-                ))
-              ) : (
-                <p className="py-8 text-center text-sm text-muted-foreground">
-                  You&apos;re all caught up!
-                </p>
-              )}
-            </CardContent>
-          </Card>
-
-          {read.length > 0 && (
-            <Card className="mt-4 shadow-sm">
+          <TabsContent value="all" className="mt-4">
+            <Card className="shadow-sm">
               <CardHeader>
-                <CardTitle className="text-base text-muted-foreground">
-                  Earlier
+                <CardTitle className="flex items-center gap-2">
+                  <Bell className="size-5" />
+                  Notification Feed
                 </CardTitle>
+                <CardDescription>
+                  Recent activity and alerts from your workspace
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
-                {read.map((notification) => (
+                {notifications.map((notification) => (
                   <NotificationRow
                     key={notification.id}
                     notification={notification}
@@ -174,9 +138,53 @@ export function NotificationsPage() {
                 ))}
               </CardContent>
             </Card>
-          )}
-        </TabsContent>
-      </Tabs>
-    </div>
+          </TabsContent>
+
+          <TabsContent value="unread" className="mt-4">
+            <Card className="shadow-sm">
+              <CardHeader>
+                <CardTitle>Unread Notifications</CardTitle>
+                <CardDescription>
+                  {unread.length} notification{unread.length !== 1 && "s"}{" "}
+                  require your attention
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {unread.length > 0 ? (
+                  unread.map((notification) => (
+                    <NotificationRow
+                      key={notification.id}
+                      notification={notification}
+                    />
+                  ))
+                ) : (
+                  <p className="py-8 text-center text-sm text-muted-foreground">
+                    You&apos;re all caught up!
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+
+            {read.length > 0 && (
+              <Card className="mt-4 shadow-sm">
+                <CardHeader>
+                  <CardTitle className="text-base text-muted-foreground">
+                    Earlier
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {read.map((notification) => (
+                    <NotificationRow
+                      key={notification.id}
+                      notification={notification}
+                    />
+                  ))}
+                </CardContent>
+              </Card>
+            )}
+          </TabsContent>
+        </Tabs>
+      </div>
+    </>
   );
 }
