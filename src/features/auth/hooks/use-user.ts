@@ -1,5 +1,3 @@
-// features/auth/hooks/use-user.ts
-
 import { useQuery } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/auth-store";
 import { me } from "@/services/auth/auth.service";

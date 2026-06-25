@@ -35,3 +35,8 @@ export async function refresh(): Promise<RefreshResponse> {
   await randomWait();
   return res;
 }
+
+export async function logout() {
+  // await api.post("/auth/logout");
+  await randomWait();
+}

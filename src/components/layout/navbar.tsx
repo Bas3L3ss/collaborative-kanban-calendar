@@ -1,5 +1,6 @@
-import { Bell, Menu, Search } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Bell, Menu, Search, LogOut, Loader2 } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -27,8 +28,25 @@ import { useSidebarStore } from "@/store/sidebar-store";
 import { useUser } from "@/features/auth/hooks/use-user";
 import { getInitials } from "@/utils/get-initials";
 import type { User } from "@/features/auth/types";
+import { useLogout } from "@/features/auth/hooks/use-logout";
+import { useAuthStore } from "@/store/auth-store";
 
 function UserAvatarMenu({ user }: { user: User }) {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { mutate: logout, isPending } = useLogout();
+  const clearAccessToken = useAuthStore((s) => s.clearAccessToken);
+
+  function handleSignOut() {
+    logout(undefined, {
+      onSuccess: () => {
+        queryClient.clear();
+        clearAccessToken();
+        navigate(ROUTES.LOGIN);
+      },
+    });
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -51,8 +69,27 @@ function UserAvatarMenu({ user }: { user: User }) {
         <DropdownMenuItem asChild>
           <Link to={ROUTES.SETTINGS}>Settings</Link>
         </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link to={ROUTES.LOGIN}>Sign out</Link>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleSignOut();
+          }}
+          disabled={isPending}
+          className="text-destructive cursor-pointer"
+        >
+          {isPending ? (
+            <>
+              <Loader2 className="mr-2 size-4 animate-spin" />
+              Signing out...
+            </>
+          ) : (
+            <>
+              <LogOut className="mr-2 size-4" />
+              Sign out
+            </>
+          )}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
